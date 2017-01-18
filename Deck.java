@@ -27,4 +27,11 @@ public class Deck {
 		deck.printDeck();
 		}
 	}
+	public Card deal(){
+	Random generator = new Random();
+        int rand =generator.nextInt(deck.size())+1; 
+        Card temp = deck.get(rand);
+        deck.remove(rand);
+        return temp;
+	   }
 
