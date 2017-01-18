@@ -21,4 +21,14 @@ public class Player {
 		return chips;
 	}
 
+	public int getSum() {
+		int tempSum = 0;
+		for(int i = 0; i < hand.size(); i++) {
+			Card temp = hand.get(i);
+			tempSum += temp.getValue();
+		}
+		return tempSum;
+	}
+	
 }
+
