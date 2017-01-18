@@ -1,5 +1,3 @@
-package school.work;
-
 import java.util.*;
 
 public class Player {
