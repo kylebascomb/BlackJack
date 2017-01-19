@@ -30,6 +30,8 @@ public class Card
             value = 10;
         else
             value = valueA;
+        if(valueA == 1)
+            value = 11;
     }
 
     public String getSuit()
