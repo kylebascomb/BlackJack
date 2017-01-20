@@ -28,6 +28,8 @@ public class Deck {
 	        int rand = generator.nextInt(deck.size()); 
 	        Card temp = deck.get(rand);
 	        deck.remove(rand);
+		if(deck.size() == 0 )
+                fillDeck(deck);
 	        return temp;
 		   }
 	
