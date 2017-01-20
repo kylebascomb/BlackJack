@@ -3,10 +3,9 @@ import java.util.*;
 public class Player {
     private String playerName;
     private ArrayList<Card> hand;
-    private int chips;
     private boolean dealer;
     
-    public Player(String name, int currency, boolean isDealer) {
+    public Player(String name, boolean isDealer) {
         
         playerName = name;
         hand = new ArrayList<Card>();
@@ -17,10 +16,6 @@ public class Player {
     
     public String getPlayerName() {
         return playerName;
-    }
-    
-    public int getChips() {
-        return chips;
     }
     
     public boolean isDealer(){
