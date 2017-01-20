@@ -9,7 +9,6 @@ public class Player {
         
         playerName = name;
         hand = new ArrayList<Card>();
-        chips = currency;
         dealer = isDealer;
         
     }
