@@ -32,6 +32,10 @@ public class Player {
         return tempSum;
     }
     
+    public int getSumAce() { 
+        return getSum()-10;
+    }
+    
     public void addToHand(Card a){
 		hand.add(a);
         }
@@ -65,11 +69,13 @@ public class Player {
     }
     
     public void printDeck(){
-    	System.out.print(playerName + ": ");
+    	System.out.println(playerName + ": ");
     	for(int i = 0; i < hand.size(); i++){
     		Card temp = hand.get(i);
-    		System.out.print(temp.getSuit() + " " + temp.getCard() + " || ");
+    		System.out.println(temp.getSuit() + " " + temp.getCard());
     	}
+    	System.out.println();
     }
     
 }
+
