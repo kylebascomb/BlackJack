@@ -38,4 +38,8 @@ public class Player {
         return tempSum;
     }
     
+    	public void addToHand(Card a){
+		hand.add(a);
+        }
+    
 }
