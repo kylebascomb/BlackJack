@@ -22,83 +22,97 @@ public class BlackJack {
         }
 
         //initial deal
-        for(int i = 0; i < playerList.size(); i++){
-            Player temp = playerList.get(i);
-            temp.addToHand(deck.deal());
-            temp.addToHand(deck.deal());
-        }
-
-        //game
-        for(int i = 0; i < playerList.size(); i++){
-            Player temp = playerList.get(i);
-            if(temp.isDealer() == true){
-                //TODO DEALER CODE CHECK FOR ACE
-                temp.printDeck();
-                if(temp.getSum() < 17){
-                    temp.addToHand(deck.deal());
-                    i--;
-                }   
+        boolean cont = true;
+        
+        while(cont == true){
+            for(int i = 0; i < playerList.size(); i++){
+                Player temp = playerList.get(i);
+                temp.addToHand(deck.deal());
+                temp.addToHand(deck.deal());
             }
-            else{
-                if(temp.getSum() > 21){
-                    if(temp.checkAce() == true){
-                        //TODO fix for ace
-                    }
-                    System.out.println("BUST");
+
+            //game
+            for(int i = 0; i < playerList.size(); i++){
+                Player temp = playerList.get(i);
+                if(temp.isDealer() == true){
+                    //TODO DEALER CODE CHECK FOR ACE
                     temp.printDeck();
+                    if(temp.getSum() < 17){
+                        temp.addToHand(deck.deal());
+                        i--;
+                    }   
                 }
                 else{
-                    if(temp.checkSplit() == true){
+                    if(temp.getSum() > 21){
+                        if(temp.checkAce() == true){
+                            //TODO fix for ace
+                        }
+                        System.out.println("BUST");
                         temp.printDeck();
-                        System.out.println("Enter 1 for hit");
-                        System.out.println("Enter 2 for stay");
-                        System.out.println("Enter 3 for split");
-
-                        int selection = in.nextInt();
-
-                        if(selection == 1){
-                            temp.addToHand(deck.deal());
-                            i--;
-                        }
-                        if(selection == 2){
-                            //nothing
-                        }
-                        if(selection == 3){
-                            Player split = new Player(temp.getPlayerName(),false);
-                            Card splitCard = temp.getCard(1);
-                            temp.removeFromHand(1);
-                            split.addToHand(splitCard);
-                            temp.addToHand(deck.deal());
-                            temp.printDeck();
-                            split.addToHand(deck.deal());
-                            playerList.add(i+1,split);
-                        }
                     }
-                    // else only hit or stay
                     else{
-                        temp.printDeck();
-                        System.out.println("Enter 1 for hit");
-                        System.out.println("Enter 2 for stay");
-                        System.out.println("Enter 3 for double down");
+                        if(temp.checkSplit() == true){
+                            temp.printDeck();
+                            System.out.println("Enter 1 for hit");
+                            System.out.println("Enter 2 for stay");
+                            System.out.println("Enter 3 for split");
 
-                        int selection = in.nextInt();
+                            int selection = in.nextInt();
 
-                        if(selection == 1){
-                            temp.addToHand(deck.deal());
-                            i--;
+                            if(selection == 1){
+                                temp.addToHand(deck.deal());
+                                i--;
+                            }
+                            if(selection == 2){
+                                //nothing
+                            }
+                            if(selection == 3){
+                                Player split = new Player(temp.getPlayerName(),false);
+                                Card splitCard = temp.getCard(1);
+                                temp.removeFromHand(1);
+                                split.addToHand(splitCard);
+                                temp.addToHand(deck.deal());
+                                temp.printDeck();
+                                split.addToHand(deck.deal());
+                                playerList.add(i+1,split);
+                            }
                         }
-                        if(selection == 2){
-                            //nothing
-                        }
-                        if(selection == 3){
-                            temp.addToHand(deck.deal());
-                        }
+                        // else only hit or stay
+                        else{
+                            temp.printDeck();
+                            System.out.println("Enter 1 for hit");
+                            System.out.println("Enter 2 for stay");
+                            System.out.println("Enter 3 for double down");
 
+                            int selection = in.nextInt();
+
+                            if(selection == 1){
+                                temp.addToHand(deck.deal());
+                                i--;
+                            }
+                            if(selection == 2){
+                                //nothing
+                            }
+                            if(selection == 3){
+                                temp.addToHand(deck.deal());
+                            }
+
+                        }
                     }
                 }
+
             }
-
+            Scanner answer = new Scanner(System.in);
+            System.out.println("Would you like to play again? (y/n)");
+            if(answer.nextLine().equalsIgnoreCase("Y")){
+                cont = true;
+                for(int i = 0; i < playerList.size(); i++)
+                {
+                    Player temp = playerList.get(i);
+                    temp.eraseHand();
+                }
+            }
+            else cont = false;
         }
-
     }
 }
