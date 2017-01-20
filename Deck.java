@@ -22,16 +22,18 @@ public class Deck {
 			System.out.println(temp.getSuit() + " " + temp.getValue());
 		}
 	}
+	
+	public Card deal(){
+		Random generator = new Random();
+	        int rand = generator.nextInt(deck.size()); 
+	        Card temp = deck.get(rand);
+	        deck.remove(rand);
+	        return temp;
+		   }
+	
 	public static void main(String[] args){
 		Deck deck  = new Deck();
 		deck.printDeck();
 		}
 	}
-	public Card deal(){
-	Random generator = new Random();
-        int rand =generator.nextInt(deck.size())+1; 
-        Card temp = deck.get(rand);
-        deck.remove(rand);
-        return temp;
-	   }
 
