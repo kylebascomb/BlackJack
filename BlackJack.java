@@ -44,12 +44,8 @@ public class BlackJack {
                 }
                 else{   
                     if(temp.getSum() > 21){
-                        if(temp.checkAce() == true){
-                            //TODO fix for ace
-                        }
-                        //System.out.println("BUST"); -Probably Do Not Need Anymore
                         temp.printDeck();
-                    } else if (temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
+                    } else if (temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true) {
                         temp.printDeck();
                     }
                     else {
@@ -119,7 +115,7 @@ public class BlackJack {
             for(int i = 0; i < playerList.size() - 1; i++) {
                 Player temp = playerList.get(i);
 
-                if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
+                if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true) {
                     System.out.println(temp.getPlayerName() + ": BlackJack!");
                 } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
                 //TODO If Player and Dealer get BlackJack PUSH
