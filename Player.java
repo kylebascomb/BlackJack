@@ -32,9 +32,10 @@ public class Player {
         return tempSum;
     }
     
-    public int getSumAce() { 
-        return getSum()-10;
+    public int getSumAce() {
+    	return getSum() - 10;
     }
+    
     
     public void addToHand(Card a){
 		hand.add(a);
@@ -42,6 +43,13 @@ public class Player {
     
     public void removeFromHand(int a){
     	hand.remove(a);
+    }
+    
+    public void eraseHand() {
+    	for(int i = 0; i < hand.size(); i++) {
+    		hand.remove(i);
+    		i--;
+    	}
     }
     
     public boolean checkSplit(){
@@ -58,7 +66,16 @@ public class Player {
     public boolean checkAce(){
     	for(int i = 0; i < hand.size(); i++){
     		Card temp = hand.get(i);
-    		if(temp.getCard().equals("ACE"))
+    		if(temp.getCard().equals("Ace"))
+    			return true;
+    	}
+    	return false;
+    }
+    
+    public boolean checkFace(){
+    	for(int i = 0; i < hand.size(); i++){
+    		Card temp = hand.get(i);
+    		if(temp.getCard().equals("10") || temp.getCard().equals("Jack") || temp.getCard().equals("Queen") || temp.getCard().equals("King") )
     			return true;
     	}
     	return false;
@@ -69,13 +86,13 @@ public class Player {
     }
     
     public void printDeck(){
-    	System.out.println(playerName + ": ");
+    	System.out.print(playerName + ": ");
     	for(int i = 0; i < hand.size(); i++){
     		Card temp = hand.get(i);
     		System.out.println(temp.getSuit() + " " + temp.getCard());
     	}
+    	System.out.println(getSum());
     	System.out.println();
     }
     
 }
-
