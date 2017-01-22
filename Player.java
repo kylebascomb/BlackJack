@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 public class Player {
@@ -30,15 +31,11 @@ public class Player {
             Card temp = hand.get(i);
             tempSum += temp.getValue();
             if(tempSum > 21 && aceCount > 0){
-                tempSum = tempSum -10;
+                tempSum -= 10;
                 aceCount--;
             }
         }
         return tempSum;
-    }
-
-    public int getSumAce() {
-        return getSum() - 10;
     }
 
     public void addToHand(Card a){
@@ -71,7 +68,7 @@ public class Player {
         int count = 0;
         for(int i = 0; i < hand.size(); i++){
             Card temp = hand.get(i);
-            if(temp.getCard().equals("Ace"))
+            if(temp.getCard().equals("ACE"))
                 count ++;
         }
         return count;
@@ -101,3 +98,4 @@ public class Player {
     }
 
 }
+
