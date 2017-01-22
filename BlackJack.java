@@ -13,7 +13,7 @@ public class BlackJack {
 
         //initialize players
         for(int i = 0; i < playerCount ; i++){
-            String name = "Player"+(i+1);
+            String name = "Player "+(i+1);
             Player temp = new Player(name, false);
             playerList.add(temp);
             if(i == playerCount-1){
@@ -21,10 +21,10 @@ public class BlackJack {
             }
         }
 
-        //initial deal
         boolean cont = true;
-        
+
         while(cont == true){
+            //initial deal
             for(int i = 0; i < playerList.size(); i++){
                 Player temp = playerList.get(i);
                 temp.addToHand(deck.deal());
@@ -35,23 +35,26 @@ public class BlackJack {
             for(int i = 0; i < playerList.size(); i++){
                 Player temp = playerList.get(i);
                 if(temp.isDealer() == true){
-                    //TODO DEALER CODE CHECK FOR ACE
+                    
                     temp.printDeck();
                     if(temp.getSum() < 17){
                         temp.addToHand(deck.deal());
                         i--;
                     }   
                 }
-                else{
+                else{   
                     if(temp.getSum() > 21){
                         if(temp.checkAce() == true){
                             //TODO fix for ace
                         }
-                        System.out.println("BUST");
+                        //System.out.println("BUST"); -Probably Do Not Need Anymore
+                        temp.printDeck();
+                    } else if (temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
                         temp.printDeck();
                     }
-                    else{
-                        if(temp.checkSplit() == true){
+                    else {
+                        
+                        if(temp.getSum() < 21 && temp.checkSplit() == true){ 
                             temp.printDeck();
                             System.out.println("Enter 1 for hit");
                             System.out.println("Enter 2 for stay");
@@ -77,33 +80,63 @@ public class BlackJack {
                                 playerList.add(i+1,split);
                             }
                         }
+
                         // else only hit or stay
-                        else{
-                            temp.printDeck();
-                            System.out.println("Enter 1 for hit");
-                            System.out.println("Enter 2 for stay");
-                            System.out.println("Enter 3 for double down");
+                        else {
+                            temp.printDeck();  
+                            if(temp.getSum() < 21){ 
+                                System.out.println("Enter 1 for hit");
+                                System.out.println("Enter 2 for stay");
+                                System.out.println("Enter 3 for double down");
 
-                            int selection = in.nextInt();
+                                int selection = in.nextInt();
 
-                            if(selection == 1){
-                                temp.addToHand(deck.deal());
-                                i--;
-                            }
-                            if(selection == 2){
-                                //nothing
-                            }
-                            if(selection == 3){
-                                temp.addToHand(deck.deal());
+                                if(selection == 1){
+                                    temp.addToHand(deck.deal());
+                                    i--;
+                                }
+                                if(selection == 2){
+                                    //nothing
+                                }
+                                if(selection == 3){
+                                    temp.addToHand(deck.deal());
+                                }
                             }
 
                         }
                     }
                 }
+            }
+
+            int dealerTotal = 0;
+            for(int i = 0; i < playerList.size(); i++) {
+                Player temp = playerList.get(i);
+                if(temp.isDealer() == true) {
+                    dealerTotal = temp.getSum();
+                } 
+            }   
+
+            for(int i = 0; i < playerList.size() - 1; i++) {
+                Player temp = playerList.get(i);
+
+                if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
+                    System.out.println(temp.getPlayerName() + ": BlackJack!");
+                } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
+                //TODO If Player and Dealer get BlackJack PUSH
+                }*/ else if(temp.getSum() > 21) {
+                    System.out.println(temp.getPlayerName() + ": You Bust!");
+                } else if(temp.getSum() == dealerTotal) {
+                    System.out.println(temp.getPlayerName() + ": Push!");
+                } else if (temp.getSum() > dealerTotal || dealerTotal > 21) {
+                    System.out.println(temp.getPlayerName() + ": You Win! ");
+                } else {
+                    System.out.println(temp.getPlayerName() + ": You Lose! ");
+                }
 
             }
+
             Scanner answer = new Scanner(System.in);
-            System.out.println("Would you like to play again? (y/n)");
+            System.out.println("\nWould you like to play again? (y/n)");
             if(answer.nextLine().equalsIgnoreCase("Y")){
                 cont = true;
                 for(int i = 0; i < playerList.size(); i++)
