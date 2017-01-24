@@ -1,5 +1,28 @@
 
 
+   import java.util.*;
+
+public class BlackJack {
+    Deck deck;
+    ArrayList<Player> playerList;
+    Player dealer;
+    public BlackJack(){
+        deck = new Deck();
+        playerList = new ArrayList<Player>();
+        dealer = new Player("Dealer",true);
+    }
+
+    public void initializePlayers(int playerCount){
+        for(int i = 0; i < playerCount ; i++){
+            String name = "Player "+(i+1);
+            Player temp = new Player(name, false);
+            playerList.add(temp);
+            if(i == playerCount-1){
+                playerList.add(dealer);
+            }
+        } 
+    }
+
     public void clearHand(){
         for(int i = 0; i < playerList.size(); i++)
         {
