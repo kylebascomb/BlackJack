@@ -50,6 +50,10 @@ public class ImageDemo extends JPanel {
 		c.add(hit);
 		JButton stay = new JButton("STAY");
 		c.add(stay);
+		JButton doubleDown = new JButton("DOUBLE DOWN");
+		c.add(doubleDown);
+		JButton split = new JButton("SPLIT");
+		c.add(split);
 		
 		class HitButtonListener implements ActionListener {
 			public void actionPerformed(ActionEvent event) {
@@ -58,8 +62,32 @@ public class ImageDemo extends JPanel {
 			}
 		}
 		
+		class StayButtonListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				
+			}
+		}
+		
+		class DoubleDownButtonListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				
+			}
+		}
+		
+		class SplitButtonListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				
+			}
+		}
+		
 		ActionListener hitListener = new HitButtonListener();
 		hit.addActionListener(hitListener);
+		ActionListener stayListener = new StayButtonListener();
+		stay.addActionListener(stayListener);
+		ActionListener doubleDownListener = new DoubleDownButtonListener();
+		stay.addActionListener(doubleDownListener);
+		ActionListener splitListener = new SplitButtonListener();
+		stay.addActionListener(splitListener);
 		
 		frame.add(c);
 		frame.setVisible(true); 
