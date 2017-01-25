@@ -12,7 +12,8 @@ public class BlackJack extends JPanel{
     private Player dealer;
     private int xPos;
     private int yPos;
-
+    private boolean dealerDone;
+    private boolean hasSplit;
     private int selection;
     private boolean blackJack,push,bust,win,lose = false;
     JButton hit = new JButton("HIT");
@@ -28,7 +29,6 @@ public class BlackJack extends JPanel{
         selection = 0;
         add(hit);
         add(stay);
-        add(doubleDown);
         class HitButtonListener implements ActionListener {
             public void actionPerformed(ActionEvent event) {
                 setSelection1();
@@ -46,14 +46,13 @@ public class BlackJack extends JPanel{
                 setSelection3();
             }
         }
-        
+
         class SplitButtonListener implements ActionListener{
             public void actionPerformed(ActionEvent event) {
                 setSelection4();
             }
         }
-        
-        
+
         ActionListener hitListener = new HitButtonListener();
         hit.addActionListener(hitListener);
         ActionListener stayListener = new StayButtonListener();
@@ -64,7 +63,6 @@ public class BlackJack extends JPanel{
         split.addActionListener(splitListener);  
 
     }
-
 
     public void setSelection1(){
         selection = 1;
@@ -81,28 +79,34 @@ public class BlackJack extends JPanel{
     public void setSelection4(){
         selection =4;
     }
-    
+
     public void paintComponent (Graphics g){
         Graphics2D g2 = (Graphics2D)g;
         for(int i = 0; i < playerList.size(); i ++){
             int xPos = 150;
             Player temp = playerList.get(i);
             ArrayList<Card> playerHand = temp.getHand();
+
             for(int j = 0; j < playerHand.size(); j++){
                 Card tempCard = playerHand.get(j);
                 BufferedImage image = tempCard.getImage();
-                if(temp.isDealer() == true && j == 0){
+                if(temp.isDealer() == true && j == 0 && dealerDone == false){
                     try{
-                        image = ImageIO.read(new File("BACK.jpg")); // comment out if need to test
+                        image = ImageIO.read(new File("BACK.jpg"));
                     }
                     catch(Exception e){}
                 }
+                if(hasSplit == true && i == 1){
+                    if(j == 0)
+                         xPos = xPos + 200 +(15*(playerHand.size()));
+                         else xPos = xPos + (15+playerHand.size());
+                }
+            
                 if(j == 0){
-                if(j == 0){
-                    xPos =  xPos;// fix for graphical update glitch
+                    xPos =  xPos;
                 }
                 else{
-                    xPos =  xPos + (15*playerHand.size());
+                    xPos =  xPos + (15*(playerHand.size()));
                 }
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
@@ -125,7 +129,7 @@ public class BlackJack extends JPanel{
         }
     }
 
-   public void initializePlayers(int playerCount){
+    public void initializePlayers(int playerCount){
         for(int i = 0; i < playerCount ; i++){
             String name = "Player "+(i+1);
             Player temp = new Player(name, false);
@@ -148,7 +152,7 @@ public class BlackJack extends JPanel{
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
             temp.addToHand(deck.deal());
-            
+
             temp.addToHand(deck.deal());
             repaint();
         }
@@ -156,82 +160,67 @@ public class BlackJack extends JPanel{
     }
 
     public void gameLogic(){// Condense more
-        Scanner in = new Scanner(System.in);
+        int hitCount =0;
+        add(doubleDown);
+        hasSplit = false;
         for(int count = 0; count < playerList.size(); count++){
             Player temp = playerList.get(count);
             selection = 0;
-            if(temp.isDealer() == true){
+            dealerDone = false;
+            
+            if(temp.checkSplit() == true && temp.isDealer() == false){
+                remove(doubleDown);
+                add(split);
+            }
 
+            if(temp.isDealer() == true){
                 if(temp.getSum() < 17){
                     temp.addToHand(deck.deal());
+                    count--;
                     repaint();
                 }   
+                else{
+                    dealerDone = true;
+                    repaint();
+                }
             }
             else{   
-                if(temp.getSum() > 21){
-                    temp.printDeck();
-                } else if (temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true) {
-                    temp.printDeck();
-                }
-                else {
-
-                    if(temp.getSum() < 21 && temp.checkSplit() == true){ 
-                        temp.printDeck();
-                        System.out.println("Enter 1 for hit");
-                        System.out.println("Enter 2 for stay");
-                        System.out.println("Enter 3 for split");
-
-                        int selection = in.nextInt();
-
-                        if(selection == 1){
-                            temp.addToHand(deck.deal());
-                            count--;
+                if(temp.getSum() < 21){ 
+                    while(selection == 0){
+                        try{
+                            Thread.sleep(500);
                         }
-                        if(selection == 2){
-                            //nothing
-                        }
-                        if(selection == 3){
-                            Player split = new Player(temp.getPlayerName(),false);
-                            Card splitCard = temp.getCard(1);
-                            temp.removeFromHand(1);
-                            split.addToHand(splitCard);
-                            temp.addToHand(deck.deal());
-                            temp.printDeck();
-                            split.addToHand(deck.deal());
-                            playerList.add(count+1,split);
-                        }
+                        catch(Exception e){}
+                    }
+                    
+                    if(selection == 1){
+                        temp.addToHand(deck.deal());
+                        count--;
+                        remove(doubleDown);
+                        repaint();
                     }
 
-                    // else only hit or stay
-                    else {
+                    if(selection == 2){
+                        //nothing
+                    }
+                    
+                    if(selection == 3){
+                        temp.addToHand(deck.deal()); 
+                        repaint();
 
-                        if(temp.getSum() < 21){ 
-                            while(selection == 0){
-                                try{
-                                    Thread.sleep(500);
-                                }
-                                catch(Exception e){}
-                            }
-                            if(selection == 1){
-                               temp.addToHand(deck.deal());
-                               count--;
-                               repaint();
-                            }
+                    }
 
-                            if(selection == 2){
-                                //nothing
-                            }
-                            if(selection == 3){
-                                temp.addToHand(deck.deal()); 
-                                repaint();
-                                
-                                
-                            }
-                            
-                           
-
-                        }
-
+                    if(selection == 4){
+                        Player split = new Player(temp.getPlayerName(),false);
+                        Card splitCard = temp.getCard(1);
+                        temp.removeFromHand(1);
+                        split.addToHand(splitCard);
+                        temp.addToHand(deck.deal());
+                        hasSplit = true;
+                        split.addToHand(deck.deal());
+                        playerList.add(count+1,split);
+                        repaint();
+                        count--;
                     }
                 }
             }
@@ -255,7 +244,7 @@ public class BlackJack extends JPanel{
             ArrayList<Card> hand = temp.getHand();
 
             if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true && hand.size() == 2) {// ace+face+8+2 counted as blackjack
-               blackJack = true;
+                blackJack = true;
             } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
             //TODO If Player and Dealer get BlackJack PUSH
             }*/ else if(temp.getSum() > 21) {
