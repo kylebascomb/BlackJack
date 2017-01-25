@@ -16,7 +16,6 @@ public class BlackJack extends JPanel{
     private int yPos;
  
     private int selection;
-    private boolean hasPressed;
     JButton hit = new JButton("HIT");
     JButton stay = new JButton("STAY");
     JButton doubleDown = new JButton("DOUBLE DOWN");
@@ -27,9 +26,7 @@ public class BlackJack extends JPanel{
         dealer = new Player("Dealer",true);
         xPos = 0;
         yPos = 0;
-
         selection = 0;
-        hasPressed = false;
         add(hit);
         add(stay);
         add(doubleDown);
@@ -70,17 +67,14 @@ public class BlackJack extends JPanel{
 
     public void setSelection1(){
         selection = 1;
-        hasPressed = true;
     }
 
     public void setSelection2(){
         selection = 2;
-        hasPressed = true;
     }
 
     public void setSelection3(){
         selection = 3;
-        hasPressed = true;
     }
 
     public void paintComponent (Graphics g){
@@ -121,7 +115,6 @@ public class BlackJack extends JPanel{
         for(int count = 0; count < playerList.size(); count=count){
             Player temp = playerList.get(count);
             selection = 0;
-            hasPressed = false;
             if(temp.isDealer() == true){
 
                 if(temp.getSum() < 17){
@@ -167,12 +160,9 @@ public class BlackJack extends JPanel{
                     else {
                         temp.printDeck();  
                         if(temp.getSum() < 21){ 
-                            add(hit);
-                            add(stay);
-                            add(doubleDown);
-                            while(hasPressed == false){
+                            while(selection == 0){
                                 try{
-                                    Thread.sleep(1000);
+                                    Thread.sleep(500);
                                 }
                                 catch(Exception e){}
                             }
