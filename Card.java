@@ -4,12 +4,20 @@
  * @author (your name) 
  * @version (a version number or a date)
  */
+import javax.swing.*;
+import java.awt.*;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
+import java.util.*;
+import java.awt.event.*;
 public class Card
 {
     private String suit;
     private int value;
     private String card;
-    private final String[] CARDS ={"ACE","TWO","THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE","TEN","JACK","QUEEN","KING"};
+    private BufferedImage image;
+    private final String[] CARDS ={"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
     /**
      * Constructor for objects of class Card
      */
@@ -17,14 +25,19 @@ public class Card
     {
         
         if( suitInt == 1)
-            suit = "Spades";
+            suit = "SPADE";
         if(suitInt == 2)
-            suit = "Clubs";
+            suit = "CLUB";
         if(suitInt == 3)
-            suit = "Hearts";
+            suit = "HEART";
         if(suitInt == 4)
-            suit = "Diamonds";
+            suit = "DIAMOND";
+            
         card = CARDS[valueA-1];
+        try{
+            image = ImageIO.read(new File(card+"_"+suit+".jpg"));
+        }
+        catch(Exception e){}
         
         if(valueA >= 11)
             value = 10;
@@ -47,5 +60,9 @@ public class Card
     public int getValue()
     {
         return value;
+    }
+    
+    public BufferedImage getImage(){
+        return image;
     }
 }
