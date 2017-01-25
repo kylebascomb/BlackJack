@@ -14,6 +14,7 @@ public class BlackJack extends JPanel{
     private int yPos;
 
     private int selection;
+    private boolean blackJack,push,bust,win,lose = false;
     JButton hit = new JButton("HIT");
     JButton stay = new JButton("STAY");
     JButton doubleDown = new JButton("DOUBLE DOWN");
@@ -45,12 +46,22 @@ public class BlackJack extends JPanel{
                 setSelection3();
             }
         }
+        
+        class SplitButtonListener implements ActionListener{
+            public void actionPerformed(ActionEvent event) {
+                setSelection4();
+            }
+        }
+        
+        
         ActionListener hitListener = new HitButtonListener();
         hit.addActionListener(hitListener);
         ActionListener stayListener = new StayButtonListener();
         stay.addActionListener(stayListener);
         ActionListener doubleDownListener = new DoubleDownButtonListener();
-        stay.addActionListener(doubleDownListener);  
+        doubleDown.addActionListener(doubleDownListener);  
+        ActionListener splitListener = new SplitButtonListener();
+        split.addActionListener(splitListener);  
 
     }
 
@@ -67,22 +78,42 @@ public class BlackJack extends JPanel{
         selection = 3;
     }
 
+    public void setSelection4(){
+        selection =4;
+    }
+    
     public void paintComponent (Graphics g){
         Graphics2D g2 = (Graphics2D)g;
         for(int i = 0; i < playerList.size(); i ++){
+            int xPos = 150;
             Player temp = playerList.get(i);
             ArrayList<Card> playerHand = temp.getHand();
             for(int j = 0; j < playerHand.size(); j++){
                 Card tempCard = playerHand.get(j);
                 BufferedImage image = tempCard.getImage();
-                int xPos = temp.getXPos();
+                xPos =  xPos + (15*playerHand.size());
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
+            }
+            if(blackJack == true){
+                g2.drawString("BLACKJACK!",650,500);
+            }
+            if(bust == true){
+                g2.drawString("BUST",650,500);
+            }
+            if(push == true){
+                g2.drawString("PUSH!",650,500);
+            }
+            if(win == true){
+                g2.drawString("WIN!",650,500);
+            }
+            if(lose == true){
+                g2.drawString("LOSE!",650,500);
             }
         }
     }
 
-    public void initializePlayers(int playerCount){
+   public void initializePlayers(int playerCount){
         for(int i = 0; i < playerCount ; i++){
             String name = "Player "+(i+1);
             Player temp = new Player(name, false);
@@ -105,7 +136,7 @@ public class BlackJack extends JPanel{
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
             temp.addToHand(deck.deal());
-            repaint();
+            
             temp.addToHand(deck.deal());
             repaint();
         }
@@ -114,7 +145,7 @@ public class BlackJack extends JPanel{
 
     public void gameLogic(){// Condense more
         Scanner in = new Scanner(System.in);
-        for(int count = 0; count < playerList.size(); count=count){
+        for(int count = 0; count < playerList.size(); count++){
             Player temp = playerList.get(count);
             selection = 0;
             if(temp.isDealer() == true){
@@ -171,20 +202,21 @@ public class BlackJack extends JPanel{
                             }
                             if(selection == 1){
                                temp.addToHand(deck.deal());
-
+                               count--;
                                repaint();
                             }
 
                             if(selection == 2){
-                                count++;
+                                //nothing
                             }
-
                             if(selection == 3){
                                 temp.addToHand(deck.deal()); 
                                 repaint();
-                                count++;
+                                
                                 
                             }
+                            
+                           
 
                         }
 
@@ -208,19 +240,20 @@ public class BlackJack extends JPanel{
     public void scoring(){
         for(int i = 0; i < playerList.size() - 1; i++) {
             Player temp = playerList.get(i);
+            ArrayList<Card> hand = temp.getHand();
 
-            if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true) {
-                System.out.println(temp.getPlayerName() + ": BlackJack!");
+            if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true && hand.size() == 2) {// ace+face+8+2 counted as blackjack
+               blackJack = true;
             } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
             //TODO If Player and Dealer get BlackJack PUSH
             }*/ else if(temp.getSum() > 21) {
-                System.out.println(temp.getPlayerName() + ": You Bust!");
+                bust = true;
             } else if(temp.getSum() == getDealerSum()) {
-                System.out.println(temp.getPlayerName() + ": Push!");
+                push = true;
             } else if (temp.getSum() > getDealerSum() || getDealerSum() > 21) {
-                System.out.println(temp.getPlayerName() + ": You Win! ");
+                win = true;
             } else {
-                System.out.println(temp.getPlayerName() + ": You Lose! ");
+                lose = true;
             }
 
         }
