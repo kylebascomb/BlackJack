@@ -15,14 +15,11 @@ public class Player extends JPanel{
     private BufferedImage image;
 
     public Player(String name, boolean isDealer) {
-
         playerName = name;
         hand = new ArrayList<Card>();
         dealer = isDealer;
-        xPos = 300;
         yPos = 450;
         if(isDealer == true){
-            xPos = 300;
             yPos = 100;
         }
 
@@ -54,15 +51,11 @@ public class Player extends JPanel{
 
     public void addToHand(Card a){
         hand.add(a);
-        xPos += 50;
+        
     }
 
     public void removeFromHand(int a){
         hand.remove(a);
-    }
-    
-    public int getXPos(){
-        return xPos;
     }
     
     public int getYPos(){
