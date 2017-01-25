@@ -14,7 +14,9 @@ public class BlackJack extends JPanel{
     private BufferedImage image;
     private int xPos;
     private int yPos;
-    private int count;
+ 
+    private int selection;
+    private boolean hasPressed;
     JButton hit = new JButton("HIT");
     JButton stay = new JButton("STAY");
     JButton doubleDown = new JButton("DOUBLE DOWN");
@@ -25,7 +27,36 @@ public class BlackJack extends JPanel{
         dealer = new Player("Dealer",true);
         xPos = 0;
         yPos = 0;
-        count = 0;
+
+        selection = 0;
+        hasPressed = false;
+        add(hit);
+        add(stay);
+        add(doubleDown);
+        class HitButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent event) {
+                setSelection1();
+            }
+        }
+
+        class StayButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent event) {
+                setSelection2();
+            }
+        }
+
+        class DoubleDownButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent event) {
+                setSelection3();
+            }
+        }
+        ActionListener hitListener = new HitButtonListener();
+        hit.addActionListener(hitListener);
+        ActionListener stayListener = new StayButtonListener();
+        stay.addActionListener(stayListener);
+        ActionListener doubleDownListener = new DoubleDownButtonListener();
+        stay.addActionListener(doubleDownListener);  
+
     }
 
     public void dealCard(Player temp){
@@ -33,14 +64,23 @@ public class BlackJack extends JPanel{
         xPos = temp.getXPos();
         yPos = temp.getYPos();
         repaint();
-        count--;
+
     }
-    
-    public void dealCardStay(Player temp){
-        image = temp.addToHand(deck.deal());
-        xPos = temp.getXPos();
-        yPos = temp.getYPos();
-        repaint();
+
+
+    public void setSelection1(){
+        selection = 1;
+        hasPressed = true;
+    }
+
+    public void setSelection2(){
+        selection = 2;
+        hasPressed = true;
+    }
+
+    public void setSelection3(){
+        selection = 3;
+        hasPressed = true;
     }
 
     public void paintComponent (Graphics g){
@@ -70,21 +110,20 @@ public class BlackJack extends JPanel{
     public void initialDeal(){
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
-            dealCardStay(temp);
+            dealCard(temp);
+            dealCard(temp);
         }
 
-        for(int i = 0; i < playerList.size(); i++){
-            Player temp = playerList.get(i);
-            dealCardStay(temp);
-        }
     }
 
     public void gameLogic(){// Condense more
         Scanner in = new Scanner(System.in);
-        for(int count = 0; count < playerList.size(); count++){
+        for(int count = 0; count < playerList.size(); count=count){
             Player temp = playerList.get(count);
+            selection = 0;
+            hasPressed = false;
             if(temp.isDealer() == true){
-                
+
                 if(temp.getSum() < 17){
                     dealCard(temp);
                 }   
@@ -131,30 +170,26 @@ public class BlackJack extends JPanel{
                             add(hit);
                             add(stay);
                             add(doubleDown);
-                            class HitButtonListener implements ActionListener {
-                                public void actionPerformed(ActionEvent event) {
-                                    //things to be done when click on Hit Button (Any Methods)
-                                    dealCard(temp);
+                            while(hasPressed == false){
+                                try{
+                                    Thread.sleep(1000);
                                 }
+                                catch(Exception e){}
+                            }
+                            if(selection == 1){
+                                dealCard(temp);
+
                             }
 
-                            class StayButtonListener implements ActionListener {
-                                public void actionPerformed(ActionEvent event) {
-
-                                }
+                            if(selection == 2){
+                                count++;
                             }
 
-                            class DoubleDownButtonListener implements ActionListener {
-                                public void actionPerformed(ActionEvent event) {
-
-                                }
+                            if(selection == 3){
+                                dealCard(temp);   
+                                count++;
                             }
-                            ActionListener hitListener = new HitButtonListener();
-                            hit.addActionListener(hitListener);
-                            ActionListener stayListener = new StayButtonListener();
-                            stay.addActionListener(stayListener);
-                            ActionListener doubleDownListener = new DoubleDownButtonListener();
-                            stay.addActionListener(doubleDownListener);
+
                         }
 
                     }
@@ -201,7 +236,6 @@ public class BlackJack extends JPanel{
         frame.setTitle("BlackJack");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BlackJack game = new BlackJack();
-
 
         frame.add(game);
         frame.setVisible(true); 
