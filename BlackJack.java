@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -11,10 +10,9 @@ public class BlackJack extends JPanel{
     private Deck deck;
     private ArrayList<Player> playerList;
     private Player dealer;
-    private BufferedImage image;
     private int xPos;
     private int yPos;
- 
+
     private int selection;
     JButton hit = new JButton("HIT");
     JButton stay = new JButton("STAY");
@@ -56,14 +54,6 @@ public class BlackJack extends JPanel{
 
     }
 
-    public void dealCard(Player temp){
-        image = temp.addToHand(deck.deal());
-        xPos = temp.getXPos();
-        yPos = temp.getYPos();
-        repaint();
-
-    }
-
 
     public void setSelection1(){
         selection = 1;
@@ -79,7 +69,17 @@ public class BlackJack extends JPanel{
 
     public void paintComponent (Graphics g){
         Graphics2D g2 = (Graphics2D)g;
-        g2.drawImage(image,xPos,yPos,null);
+        for(int i = 0; i < playerList.size(); i ++){
+            Player temp = playerList.get(i);
+            ArrayList<Card> playerHand = temp.getHand();
+            for(int j = 0; j < playerHand.size(); j++){
+                Card tempCard = playerHand.get(j);
+                BufferedImage image = tempCard.getImage();
+                int xPos = temp.getXPos();
+                int yPos = temp.getYPos();
+                g2.drawImage(image,xPos,yPos,null);
+            }
+        }
     }
 
     public void initializePlayers(int playerCount){
@@ -104,8 +104,10 @@ public class BlackJack extends JPanel{
     public void initialDeal(){
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
-            dealCard(temp);
-            dealCard(temp);
+            temp.addToHand(deck.deal());
+            repaint();
+            temp.addToHand(deck.deal());
+            repaint();
         }
 
     }
@@ -118,7 +120,8 @@ public class BlackJack extends JPanel{
             if(temp.isDealer() == true){
 
                 if(temp.getSum() < 17){
-                    dealCard(temp);
+                    temp.addToHand(deck.deal());
+                    repaint();
                 }   
             }
             else{   
@@ -158,7 +161,7 @@ public class BlackJack extends JPanel{
 
                     // else only hit or stay
                     else {
-                        temp.printDeck();  
+
                         if(temp.getSum() < 21){ 
                             while(selection == 0){
                                 try{
@@ -167,8 +170,9 @@ public class BlackJack extends JPanel{
                                 catch(Exception e){}
                             }
                             if(selection == 1){
-                                dealCard(temp);
+                               temp.addToHand(deck.deal());
 
+                               repaint();
                             }
 
                             if(selection == 2){
@@ -176,8 +180,10 @@ public class BlackJack extends JPanel{
                             }
 
                             if(selection == 3){
-                                dealCard(temp);   
+                                temp.addToHand(deck.deal()); 
+                                repaint();
                                 count++;
+                                
                             }
 
                         }
@@ -222,7 +228,7 @@ public class BlackJack extends JPanel{
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
-        frame.setSize(1600, 1000);
+        frame.setSize(750, 750);
         frame.setTitle("BlackJack");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BlackJack game = new BlackJack();
