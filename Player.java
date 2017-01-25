@@ -19,11 +19,11 @@ public class Player extends JPanel{
         playerName = name;
         hand = new ArrayList<Card>();
         dealer = isDealer;
-        xPos = 700;
-        yPos = 750;
+        xPos = 300;
+        yPos = 450;
         if(isDealer == true){
-            xPos = 700;
-            yPos = 250;
+            xPos = 300;
+            yPos = 100;
         }
 
     }
@@ -52,17 +52,9 @@ public class Player extends JPanel{
         return tempSum;
     }
 
-    public BufferedImage addToHand(Card a){
+    public void addToHand(Card a){
         hand.add(a);
-        image = a.getImage();
-        xPos += 65;
-        
-        return image;
-    }
-    
-    public void paintComponent (Graphics g){
-        Graphics2D g2 = (Graphics2D)g;
-        g2.drawImage(image,xPos,yPos,null);
+        xPos += 50;
     }
 
     public void removeFromHand(int a){
@@ -127,6 +119,8 @@ public class Player extends JPanel{
         System.out.println(getSum());
         System.out.println();
     }
-
+    
+    public ArrayList<Card> getHand(){
+        return hand;
+    }
 }
-
