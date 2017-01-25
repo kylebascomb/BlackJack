@@ -91,6 +91,13 @@ public class BlackJack extends JPanel{
             for(int j = 0; j < playerHand.size(); j++){
                 Card tempCard = playerHand.get(j);
                 BufferedImage image = tempCard.getImage();
+                if(temp.isDealer() == true && j == 0){
+                    try{
+                        image = ImageIO.read(new File("BACK.jpg")); // comment out if need to test
+                    }
+                    catch(Exception e){}
+                }
+                if(j == 0){
                 if(j == 0){
                     xPos =  xPos;// fix for graphical update glitch
                 }
