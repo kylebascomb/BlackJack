@@ -91,7 +91,12 @@ public class BlackJack extends JPanel{
             for(int j = 0; j < playerHand.size(); j++){
                 Card tempCard = playerHand.get(j);
                 BufferedImage image = tempCard.getImage();
-                xPos =  xPos + (15*playerHand.size());
+                if(j == 0){
+                    xPos =  xPos;// fix for graphical update glitch
+                }
+                else{
+                    xPos =  xPos + (15*playerHand.size());
+                }
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
             }
