@@ -1,15 +1,51 @@
 
+import javax.swing.*;
+import java.awt.*;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
+import java.util.*;
+import java.awt.event.*;
 
-   import java.util.*;
-
-public class BlackJack {
-    Deck deck;
-    ArrayList<Player> playerList;
-    Player dealer;
+public class BlackJack extends JPanel{
+    private Deck deck;
+    private ArrayList<Player> playerList;
+    private Player dealer;
+    private BufferedImage image;
+    private int xPos;
+    private int yPos;
+    private int count;
+    JButton hit = new JButton("HIT");
+    JButton stay = new JButton("STAY");
+    JButton doubleDown = new JButton("DOUBLE DOWN");
+    JButton split = new JButton("SPLIT");
     public BlackJack(){
         deck = new Deck();
         playerList = new ArrayList<Player>();
         dealer = new Player("Dealer",true);
+        xPos = 0;
+        yPos = 0;
+        count = 0;
+    }
+
+    public void dealCard(Player temp){
+        image = temp.addToHand(deck.deal());
+        xPos = temp.getXPos();
+        yPos = temp.getYPos();
+        repaint();
+        count--;
+    }
+    
+    public void dealCardStay(Player temp){
+        image = temp.addToHand(deck.deal());
+        xPos = temp.getXPos();
+        yPos = temp.getYPos();
+        repaint();
+    }
+
+    public void paintComponent (Graphics g){
+        Graphics2D g2 = (Graphics2D)g;
+        g2.drawImage(image,xPos,yPos,null);
     }
 
     public void initializePlayers(int playerCount){
@@ -34,24 +70,23 @@ public class BlackJack {
     public void initialDeal(){
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
-            temp.addToHand(deck.deal());
+            dealCardStay(temp);
         }
 
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
-            temp.addToHand(deck.deal());
+            dealCardStay(temp);
         }
     }
 
     public void gameLogic(){// Condense more
         Scanner in = new Scanner(System.in);
-        for(int i = 0; i < playerList.size(); i++){
-            Player temp = playerList.get(i);
+        for(int count = 0; count < playerList.size(); count++){
+            Player temp = playerList.get(count);
             if(temp.isDealer() == true){
-                temp.printDeck();
+                
                 if(temp.getSum() < 17){
-                    temp.addToHand(deck.deal());
-                    i--;
+                    dealCard(temp);
                 }   
             }
             else{   
@@ -72,7 +107,7 @@ public class BlackJack {
 
                         if(selection == 1){
                             temp.addToHand(deck.deal());
-                            i--;
+                            count--;
                         }
                         if(selection == 2){
                             //nothing
@@ -85,7 +120,7 @@ public class BlackJack {
                             temp.addToHand(deck.deal());
                             temp.printDeck();
                             split.addToHand(deck.deal());
-                            playerList.add(i+1,split);
+                            playerList.add(count+1,split);
                         }
                     }
 
@@ -93,22 +128,33 @@ public class BlackJack {
                     else {
                         temp.printDeck();  
                         if(temp.getSum() < 21){ 
-                            System.out.println("Enter 1 for hit");
-                            System.out.println("Enter 2 for stay");
-                            System.out.println("Enter 3 for double down");
+                            add(hit);
+                            add(stay);
+                            add(doubleDown);
+                            class HitButtonListener implements ActionListener {
+                                public void actionPerformed(ActionEvent event) {
+                                    //things to be done when click on Hit Button (Any Methods)
+                                    dealCard(temp);
+                                }
+                            }
 
-                            int selection = in.nextInt();
+                            class StayButtonListener implements ActionListener {
+                                public void actionPerformed(ActionEvent event) {
 
-                            if(selection == 1){
-                                temp.addToHand(deck.deal());
-                                i--;
+                                }
                             }
-                            if(selection == 2){
-                                //nothing
+
+                            class DoubleDownButtonListener implements ActionListener {
+                                public void actionPerformed(ActionEvent event) {
+
+                                }
                             }
-                            if(selection == 3){
-                                temp.addToHand(deck.deal());
-                            }
+                            ActionListener hitListener = new HitButtonListener();
+                            hit.addActionListener(hitListener);
+                            ActionListener stayListener = new StayButtonListener();
+                            stay.addActionListener(stayListener);
+                            ActionListener doubleDownListener = new DoubleDownButtonListener();
+                            stay.addActionListener(doubleDownListener);
                         }
 
                     }
@@ -127,35 +173,39 @@ public class BlackJack {
         }
         return dealerTotal;
     }
-    
+
     public void scoring(){
         for(int i = 0; i < playerList.size() - 1; i++) {
-                Player temp = playerList.get(i);
+            Player temp = playerList.get(i);
 
-                if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true) {
-                    System.out.println(temp.getPlayerName() + ": BlackJack!");
-                } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
-                //TODO If Player and Dealer get BlackJack PUSH
-                }*/ else if(temp.getSum() > 21) {
-                    System.out.println(temp.getPlayerName() + ": You Bust!");
-                } else if(temp.getSum() == getDealerSum()) {
-                    System.out.println(temp.getPlayerName() + ": Push!");
-                } else if (temp.getSum() > getDealerSum() || getDealerSum() > 21) {
-                    System.out.println(temp.getPlayerName() + ": You Win! ");
-                } else {
-                    System.out.println(temp.getPlayerName() + ": You Lose! ");
-                }
-
+            if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true) {
+                System.out.println(temp.getPlayerName() + ": BlackJack!");
+            } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
+            //TODO If Player and Dealer get BlackJack PUSH
+            }*/ else if(temp.getSum() > 21) {
+                System.out.println(temp.getPlayerName() + ": You Bust!");
+            } else if(temp.getSum() == getDealerSum()) {
+                System.out.println(temp.getPlayerName() + ": Push!");
+            } else if (temp.getSum() > getDealerSum() || getDealerSum() > 21) {
+                System.out.println(temp.getPlayerName() + ": You Win! ");
+            } else {
+                System.out.println(temp.getPlayerName() + ": You Lose! ");
             }
+
+        }
     }
 
     public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setSize(1600, 1000);
+        frame.setTitle("BlackJack");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BlackJack game = new BlackJack();
-        Scanner in = new Scanner(System.in);
-        System.out.println("How many players are there?");
-        int playerCount = in.nextInt();
-        
-        game.initializePlayers(playerCount);
+
+
+        frame.add(game);
+        frame.setVisible(true); 
+        game.initializePlayers(1);
         boolean cont = true;
 
         while(cont == true){
@@ -171,5 +221,6 @@ public class BlackJack {
             }
             else cont = false;
         }
+
     }
 }
