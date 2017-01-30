@@ -10,46 +10,48 @@ public class BlackJack extends JPanel{
     private Deck deck;
     private ArrayList<Player> playerList;
     private Player dealer;
-    private int xPos;
-    private int yPos;
     private boolean dealerDone;
-    private boolean hasSplit;
+    private boolean hasSplit, hasHit;
     private int selection;
     private boolean blackJack,push,bust,win,lose,cont = false;
     JButton hit = new JButton("HIT");
     JButton stay = new JButton("STAY");
     JButton doubleDown = new JButton("DOUBLE DOWN");
     JButton split = new JButton("SPLIT");
-    JButton yes = new JButton("YES");
-    JButton no = new JButton("NO");
+    private BufferedImage imageBackground;
     private ArrayList<BufferedImage> deckBack;
     private BufferedImage imageBack;
     private BufferedImage removeBack;
-    private int deckSize = 53;
+    private BufferedImage cardBack;
+    private int deckSize;
+    private BufferedImage imageEnd;
     public BlackJack(){
         deck = new Deck();
+        deckSize = 53;
         playerList = new ArrayList<Player>();
         dealer = new Player("Dealer",true);
-        xPos = 0;
-        yPos = 0;
         selection = 0;
         add(hit);
         hit.setBounds(1700, 100, 100, 50);
         add(stay);
         stay.setBounds(1700, 150, 100, 50);
         
+      
+    	try{
+            cardBack = ImageIO.read(new File("BACK.jpg"));
+        }
+        catch(Exception e){}
+    	
+    	
         deckBack = new ArrayList<BufferedImage>();
 		try{
 			for(int i = 0; i < 52; i++) {
 				imageBack = ImageIO.read(new File("BACK.jpg"));
 				deckBack.add(imageBack);
 			}
-			
 		}
-		catch(Exception e) {
-			//System.out.println("Hey, get it right.");
-		}
-        
+		catch(Exception e) {}
+
         class HitButtonListener implements ActionListener {
             public void actionPerformed(ActionEvent event) {
                 setSelection1();
@@ -71,21 +73,10 @@ public class BlackJack extends JPanel{
         class SplitButtonListener implements ActionListener{
             public void actionPerformed(ActionEvent event) {
                 setSelection4();
+                remove(split);
             }
         }
         
-        class YesButtonListener implements ActionListener{
-            public void actionPerformed(ActionEvent event) {
-                setSelection5();
-            }
-        }
-        
-        class NoButtonListener implements ActionListener{
-            public void actionPerformed(ActionEvent event) {
-                setSelection6();
-            }
-        }
-
         ActionListener hitListener = new HitButtonListener();
         hit.addActionListener(hitListener);
         ActionListener stayListener = new StayButtonListener();
@@ -94,17 +85,9 @@ public class BlackJack extends JPanel{
         doubleDown.addActionListener(doubleDownListener);  
         ActionListener splitListener = new SplitButtonListener();
         split.addActionListener(splitListener);
-        ActionListener yesListener = new YesButtonListener();
-        yes.addActionListener(yesListener);  
-        ActionListener noListener = new NoButtonListener();
-        no.addActionListener(noListener);  
 
     }
     
-    public void removeDeck() {
-		removeBack = deckBack.remove(0);
-		deckSize--;
-	}
     
     public void setSelection1(){
         selection = 1;
@@ -121,17 +104,15 @@ public class BlackJack extends JPanel{
     public void setSelection4(){
         selection = 4;
     }
-    
-    public void setSelection5(){
-    	selection = 5;
-    }
-    
-    public void setSelection6(){
-    	selection = 6;
-    }
 
     public void paintComponent (Graphics g){
         Graphics2D g2 = (Graphics2D)g;
+        try{
+        	imageBackground = ImageIO.read(new File("Background-Green-1600x1200.jpg"));
+        } catch(Exception e) {
+        	
+        }
+        g2.drawImage(imageBackground, 0, 0, null);
         for(int i = 0; i < playerList.size(); i ++){
             int xPos = 150;
             Player temp = playerList.get(i);
@@ -148,7 +129,7 @@ public class BlackJack extends JPanel{
                 }
                 if(hasSplit == true && i == 1){
                     if(j == 0)
-                         xPos = xPos + 200 +(15*(playerHand.size()));
+                         xPos = xPos + 500 +(15*(playerHand.size()));
                          else xPos = xPos + (15+playerHand.size());
                 }
             
@@ -160,34 +141,62 @@ public class BlackJack extends JPanel{
                 }
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
+                deckSize--;
             }
             if(blackJack == true){
-                g2.drawString("BLACKJACK!",650,500);
+            	try{
+            		imageEnd = ImageIO.read(new File("blackjack.jpg"));
+            	} catch(Exception e){
+            		
+            	}
+                g2.drawImage(imageEnd, 650, 500, null);
             }
             if(bust == true){
-                g2.drawString("BUST",650,500);
+            	try{
+            		imageEnd = ImageIO.read(new File("bust.jpg"));
+            	} catch(Exception e){
+            		
+            	}
+                g2.drawImage(imageEnd, 650, 500, null);
             }
             if(push == true){
-                g2.drawString("PUSH!",650,500);
+            	try{
+            		imageEnd = ImageIO.read(new File("push.jpg"));
+            	} catch(Exception e){
+            		
+            	}
+                g2.drawImage(imageEnd, 650, 500, null);
             }
             if(win == true){
-                g2.drawString("WIN!",650,500);
+            	try{
+            		imageEnd = ImageIO.read(new File("win.jpg"));
+            	} catch(Exception e){
+            		
+            	}
+                g2.drawImage(imageEnd, 650, 500, null);
             }
             if(lose == true){
-                g2.drawString("LOSE!",650,500);
-            }
-            if(push == true || win == true || lose == true|| bust == true || blackJack == true) {
-            	g2.drawString("Would you like to continue? Y/N",1000,500);
+            	try{
+            		imageEnd = ImageIO.read(new File("lose.jpg"));
+            	} catch(Exception e){
+            		
+            	}
+                g2.drawImage(imageEnd, 650, 500, null);
             }
         }
         
         for(int i = 0; i < deckSize; i++) {
-			g2.drawImage(removeBack, i + 1000, 0, null);
+			g2.drawImage(cardBack, i + 1000, 50, null);
 		}
+        
+        if(deckSize < 4){
+        	deckSize = 53;
+        }
         
     }
 
     public void initializePlayers(int playerCount){
+    	
         for(int i = 0; i < playerCount ; i++){
             String name = "Player "+(i+1);
             Player temp = new Player(name, false);
@@ -198,6 +207,12 @@ public class BlackJack extends JPanel{
         } 
     }
 
+    public void removePlayers() {
+    	for(int i = 0; i < playerList.size(); i++) {
+    		playerList.remove(i); 
+    	}
+    }
+    
     public void clearHand(){
         for(int i = 0; i < playerList.size(); i++)
         {
@@ -207,28 +222,35 @@ public class BlackJack extends JPanel{
     }
 
     public void initialDeal(){
+    	blackJack= false;
+    	win  = false;
+    	lose = false;
+    	push = false;
+    	bust = false;
+    	cont = false;
+    	
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
             temp.addToHand(deck.deal());
-            removeDeck();
             temp.addToHand(deck.deal());
-            removeDeck();
+
             repaint();
         }
 
     }
 
     public void gameLogic(){// Condense more
-        int hitCount = 0;
+        
         add(doubleDown);
         doubleDown.setBounds(1650, 200, 200, 50);
-        hasSplit = false;
+        hasHit = false;
         for(int count = 0; count < playerList.size(); count++){
             Player temp = playerList.get(count);
             selection = 0;
             dealerDone = false;
             
-            if(temp.checkSplit() == true && temp.isDealer() == false){
+            //TODO REMOVE SPLIT AFTER HIT
+            if(temp.checkSplit() == true && temp.isDealer() == false && hasHit == false){
                 remove(doubleDown);
                 add(split);
                 split.setBounds(1700, 200, 100, 50);
@@ -237,7 +259,6 @@ public class BlackJack extends JPanel{
             if(temp.isDealer() == true){
                 if(temp.getSum() < 17){
                     temp.addToHand(deck.deal());
-                    removeDeck();
                     count--;
                     repaint();
                 }   
@@ -250,7 +271,7 @@ public class BlackJack extends JPanel{
                 if(temp.getSum() < 21){ 
                     while(selection == 0){
                         try{
-                            Thread.sleep(500);
+                            Thread.sleep(100);
                         }
                         catch(Exception e){}
                     }
@@ -259,8 +280,10 @@ public class BlackJack extends JPanel{
                     	temp.addToHand(deck.deal());
                         count--;
                         remove(doubleDown);
-                        removeDeck();
+
                         repaint();
+                        hasSplit = false;
+                        hasHit = true;
                     }
 
                     if(selection == 2){
@@ -269,32 +292,24 @@ public class BlackJack extends JPanel{
                     
                     if(selection == 3){
                         temp.addToHand(deck.deal()); 
-                        removeDeck();
+
                         repaint();
 
                     }
 
                     if(selection == 4){
-                        Player split = new Player(temp.getPlayerName(),false);
+                        Player splitPlayer = new Player(temp.getPlayerName(),false);
                         Card splitCard = temp.getCard(1);
                         temp.removeFromHand(1);
-                        split.addToHand(splitCard);
+                        splitPlayer.addToHand(splitCard);
                         temp.addToHand(deck.deal());
-                        removeDeck();
                         hasSplit = true;
-                        split.addToHand(deck.deal());
-                        playerList.add(count+1,split);
+                        splitPlayer.addToHand(deck.deal());
+                        playerList.add(count+1,splitPlayer);
                         repaint();
                         count--;
                     }
                     
-                    if(selection == 5) {
-                    	//What happens when YES button is pressed
-                    }
-                    
-                    if(selection == 6) {
-                    	System.exit(0);
-                    }
                 }
             }
         }
@@ -329,30 +344,16 @@ public class BlackJack extends JPanel{
             } else {
                 lose = true;
             }
-            
-            if(push == true || win == true || lose == true|| bust == true || blackJack == true) {
-                add(yes);
-                yes.setBounds(1650, 500, 100, 100);
-            }
-            
-            if(push == true || win == true || lose == true|| bust == true || blackJack == true) {
-                add(no);
-                no.setBounds(1750, 500, 100, 100);
-            }
         }
     }
     
-    /**public void yesNo() {
-    	
-    	if(selection == 5) {
-        	//What happens when YES button is pressed
-        }
-        
-        if(selection == 6) {
-        	System.exit(0);
-        }
-    	
-    }**/
+    public void makeContTrue() {
+    	cont = true;
+    }  
+    
+    public boolean getCont() {
+    	return cont;
+    }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame();
@@ -366,24 +367,51 @@ public class BlackJack extends JPanel{
         frame.add(game);
         frame.setVisible(true); 
         game.initializePlayers(1);
-        boolean cont = true;
+        
 
+        class YesButtonListener implements ActionListener{
+            public void actionPerformed(ActionEvent event) {
+            	game.makeContTrue();
+            }
+        }
+        
+        class NoButtonListener implements ActionListener{
+            public void actionPerformed(ActionEvent event) {
+            	System.exit(0);
+            }
+        }
+        
+        JButton yes = new JButton("CONTINUE");
+        JButton no = new JButton("QUIT");
+        
+        ActionListener yesListener = new YesButtonListener();
+        yes.addActionListener(yesListener);  
+        ActionListener noListener = new NoButtonListener();
+        no.addActionListener(noListener);  
+        
+        boolean cont = true;
         while(cont == true){
         	
         	game.initialDeal();
             game.gameLogic();
             game.scoring();
-            //game.yesNo(); Might make it a new method to continue
-
-          Scanner answer = new Scanner(System.in);
-            System.out.println("\nWould you like to play again? (y/n)");
-            if(answer.nextLine().equalsIgnoreCase("Y")){
-                cont = true;
-                game.clearHand();
-                game.repaint();
+            game.add(yes);
+            yes.setBounds(1650, 500, 100, 100);
+            game.add(no);
+            no.setBounds(1750, 500, 100, 100);
+            while(game.getCont() == false){
+                try{
+                    Thread.sleep(100);
+                }
+                catch(Exception e){}
             }
-            else cont = false;
+            game.clearHand();
+            game.repaint();
+            game.remove(yes);
+            game.remove(no);
+           
         }
 
     }
 }
+
