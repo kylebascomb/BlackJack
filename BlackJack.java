@@ -29,7 +29,7 @@ public class BlackJack extends JPanel{
         deck = new Deck();
         deckSize = 53;
         playerList = new ArrayList<Player>();
-        dealer = new Player("Dealer",true);
+        dealer = new Player("Dealer",true,false);
         selection = 0;
         add(hit);
         hit.setBounds(1700, 100, 100, 50);
@@ -127,15 +127,9 @@ public class BlackJack extends JPanel{
                     }
                     catch(Exception e){}
                 }
-                if(hasSplit == true && i == 1){
-                    if(j == 0)
-                         xPos = xPos + 500 +(15*(playerHand.size()));
-                         else xPos = xPos + (15+playerHand.size());
-                }
-            
-                if(j == 0){
-                    xPos =  xPos;
-                }
+                if(temp.isSplitPlayer == true && j == 0){
+                       xPos = xPos + 500 +(15*(playerHand.size()));
+                }        
                 else{
                     xPos =  xPos + (15*(playerHand.size()));
                 }
@@ -199,7 +193,7 @@ public class BlackJack extends JPanel{
     	
         for(int i = 0; i < playerCount ; i++){
             String name = "Player "+(i+1);
-            Player temp = new Player(name, false);
+            Player temp = new Player(name, false,false);
             playerList.add(temp);
             if(i == playerCount-1){
                 playerList.add(dealer);
@@ -240,7 +234,7 @@ public class BlackJack extends JPanel{
     }
 
     public void gameLogic(){// Condense more
-        
+        remove(split);
         add(doubleDown);
         doubleDown.setBounds(1650, 200, 200, 50);
         hasHit = false;
@@ -280,7 +274,6 @@ public class BlackJack extends JPanel{
                     	temp.addToHand(deck.deal());
                         count--;
                         remove(doubleDown);
-
                         repaint();
                         hasSplit = false;
                         hasHit = true;
@@ -292,18 +285,16 @@ public class BlackJack extends JPanel{
                     
                     if(selection == 3){
                         temp.addToHand(deck.deal()); 
-
                         repaint();
 
                     }
 
                     if(selection == 4){
-                        Player splitPlayer = new Player(temp.getPlayerName(),false);
+                        Player splitPlayer = new Player(temp.getPlayerName(),false,true);
                         Card splitCard = temp.getCard(1);
                         temp.removeFromHand(1);
                         splitPlayer.addToHand(splitCard);
                         temp.addToHand(deck.deal());
-                        hasSplit = true;
                         splitPlayer.addToHand(deck.deal());
                         playerList.add(count+1,splitPlayer);
                         repaint();
