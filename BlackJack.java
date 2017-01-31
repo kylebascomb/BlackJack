@@ -11,7 +11,7 @@ public class BlackJack extends JPanel{
     private ArrayList<Player> playerList;
     private Player dealer;
     private boolean dealerDone;
-    private boolean hasSplit, hasHit;
+    private boolean hasHit;
     private int selection;
     private boolean blackJack,push,bust,win,lose,cont = false;
     JButton hit = new JButton("HIT");
@@ -109,10 +109,9 @@ public class BlackJack extends JPanel{
         Graphics2D g2 = (Graphics2D)g;
         try{
         	imageBackground = ImageIO.read(new File("Background-Green-1600x1200.jpg"));
-        } catch(Exception e) {
-        	
-        }
+        } catch(Exception e) {}       	       
         g2.drawImage(imageBackground, 0, 0, null);
+        
         for(int i = 0; i < playerList.size(); i ++){
             int xPos = 150;
             int splitX = 650;
@@ -136,7 +135,7 @@ public class BlackJack extends JPanel{
                 }
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
-                deckSize--;
+                
             }
             if(blackJack == true){
             	try{
@@ -144,7 +143,7 @@ public class BlackJack extends JPanel{
             	} catch(Exception e){
             		
             	}
-                g2.drawImage(imageEnd, 650, 500, null);
+                g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(bust == true){
             	try{
@@ -152,7 +151,7 @@ public class BlackJack extends JPanel{
             	} catch(Exception e){
             		
             	}
-                g2.drawImage(imageEnd, 650, 500, null);
+                g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(push == true){
             	try{
@@ -160,7 +159,7 @@ public class BlackJack extends JPanel{
             	} catch(Exception e){
             		
             	}
-                g2.drawImage(imageEnd, 650, 500, null);
+                g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(win == true){
             	try{
@@ -168,7 +167,7 @@ public class BlackJack extends JPanel{
             	} catch(Exception e){
             		
             	}
-                g2.drawImage(imageEnd, 650, 500, null);
+                g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(lose == true){
             	try{
@@ -176,7 +175,7 @@ public class BlackJack extends JPanel{
             	} catch(Exception e){
             		
             	}
-                g2.drawImage(imageEnd, 650, 500, null);
+                g2.drawImage(imageEnd, 1000, 500, null);
             }
         }
         
@@ -228,7 +227,7 @@ public class BlackJack extends JPanel{
             Player temp = playerList.get(i);
             temp.addToHand(deck.deal());
             temp.addToHand(deck.deal());
-
+            deckSize -= 2;
             repaint();
         }
 
@@ -254,6 +253,7 @@ public class BlackJack extends JPanel{
             if(temp.isDealer() == true){
                 if(temp.getSum() < 17){
                     temp.addToHand(deck.deal());
+                    deckSize--;
                     count--;
                     repaint();
                 }   
@@ -273,10 +273,10 @@ public class BlackJack extends JPanel{
                     
                     if(selection == 1){
                     	temp.addToHand(deck.deal());
+                    	deckSize--;
                         count--;
                         remove(doubleDown);
                         repaint();
-                        hasSplit = false;
                         hasHit = true;
                     }
 
@@ -286,6 +286,7 @@ public class BlackJack extends JPanel{
                     
                     if(selection == 3){
                         temp.addToHand(deck.deal()); 
+                        deckSize--;
                         repaint();
 
                     }
@@ -295,9 +296,10 @@ public class BlackJack extends JPanel{
                         Card splitCard = temp.getCard(1);
                         temp.removeFromHand(1);
                         splitPlayer.addToHand(splitCard);
-                        temp.addToHand(deck.deal());
-                        splitPlayer.addToHand(deck.deal());
+                        temp.addToHand(deck.deal());                   
+                        splitPlayer.addToHand(deck.deal());                        
                         playerList.add(count+1,splitPlayer);
+                        deckSize -= 2;
                         repaint();
                         count--;
                     }
@@ -409,4 +411,4 @@ public class BlackJack extends JPanel{
 
 
 //TODO Print end result for first hand split
-//TODO Repaint glitch makes deck smaller even though stay and dealer does not hit any cards
+
