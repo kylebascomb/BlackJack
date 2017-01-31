@@ -104,7 +104,7 @@ public class BlackJack extends JPanel{
         Graphics2D g2 = (Graphics2D)g;
         try{
             imageBackground = ImageIO.read(new File("Background-Green-1600x1200.jpg"));
-        } catch(Exception e) {}       	       
+        } catch(Exception e) {}                
         g2.drawImage(imageBackground, 0, 0, null);
 
         for(int i = 0; i < playerList.size(); i ++){
@@ -138,7 +138,12 @@ public class BlackJack extends JPanel{
                 } catch(Exception e){
 
                 }
-                g2.drawImage(imageEnd, 1000, 500, null);
+                if(temp.isSplitPlayer == true){
+                    g2.drawImage(imageEnd, 150, 650, null);
+                }
+                else{
+                    g2.drawImage(imageEnd, 650, 650, null);
+                }
             }
             if(bust == true){
                 try{
@@ -146,7 +151,12 @@ public class BlackJack extends JPanel{
                 } catch(Exception e){
 
                 }
-                g2.drawImage(imageEnd, 1000, 500, null);
+                if(temp.isSplitPlayer == true){
+                    g2.drawImage(imageEnd, 150, 650, null);
+                }
+                else{
+                    g2.drawImage(imageEnd, 650, 650, null);
+                }
             }
             if(push == true){
                 try{
@@ -154,7 +164,12 @@ public class BlackJack extends JPanel{
                 } catch(Exception e){
 
                 }
-                g2.drawImage(imageEnd, 1000, 500, null);
+                if(temp.isSplitPlayer == true){
+                    g2.drawImage(imageEnd, 150, 650, null);
+                }
+                else{
+                    g2.drawImage(imageEnd, 650, 650, null);
+                }
             }
             if(win == true){
                 try{
@@ -162,7 +177,12 @@ public class BlackJack extends JPanel{
                 } catch(Exception e){
 
                 }
-                g2.drawImage(imageEnd, 1000, 500, null);
+                if(temp.isSplitPlayer == true){
+                    g2.drawImage(imageEnd, 150, 650, null);
+                }
+                else{
+                    g2.drawImage(imageEnd, 650, 650, null);
+                }
             }
             if(lose == true){
                 try{
@@ -170,14 +190,19 @@ public class BlackJack extends JPanel{
                 } catch(Exception e){
 
                 }
-                g2.drawImage(imageEnd, 1000, 500, null);
+                if(temp.isSplitPlayer == true){
+                    g2.drawImage(imageEnd, 150, 650, null);
+                }
+                else{
+                    g2.drawImage(imageEnd, 650, 650, null);
+                }
             }
-        }
 
-        for(int i = 0; i < deck.getDeckSize(); i++) {
-            g2.drawImage(cardBack, i + 1000, 50, null);
-        }
+            for(int i = 0; i < deck.getDeckSize(); i++) {
+                g2.drawImage(cardBack, i + 1000, 50, null);
+            }
 
+        }
     }
 
     public void initializePlayers(int playerCount){
