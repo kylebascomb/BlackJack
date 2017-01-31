@@ -23,34 +23,30 @@ public class BlackJack extends JPanel{
     private BufferedImage imageBack;
     private BufferedImage removeBack;
     private BufferedImage cardBack;
-    private int deckSize;
     private BufferedImage imageEnd;
     public BlackJack(){
         deck = new Deck();
-        deckSize = 53;
         playerList = new ArrayList<Player>();
         dealer = new Player("Dealer",true,false);
         selection = 0;
         add(hit);
         hit.setBounds(1700, 100, 100, 50);
         add(stay);
-        stay.setBounds(1700, 150, 100, 50);
-        
-      
-    	try{
+        stay.setBounds(1700, 150, 100, 50);     
+
+        try{
             cardBack = ImageIO.read(new File("BACK.jpg"));
         }
         catch(Exception e){}
-    	
-    	
+
         deckBack = new ArrayList<BufferedImage>();
-		try{
-			for(int i = 0; i < 52; i++) {
-				imageBack = ImageIO.read(new File("BACK.jpg"));
-				deckBack.add(imageBack);
-			}
-		}
-		catch(Exception e) {}
+        try{
+            for(int i = 0; i < 52; i++) {
+                imageBack = ImageIO.read(new File("BACK.jpg"));
+                deckBack.add(imageBack);
+            }
+        }
+        catch(Exception e) {}
 
         class HitButtonListener implements ActionListener {
             public void actionPerformed(ActionEvent event) {
@@ -76,7 +72,7 @@ public class BlackJack extends JPanel{
                 remove(split);
             }
         }
-        
+
         ActionListener hitListener = new HitButtonListener();
         hit.addActionListener(hitListener);
         ActionListener stayListener = new StayButtonListener();
@@ -87,8 +83,7 @@ public class BlackJack extends JPanel{
         split.addActionListener(splitListener);
 
     }
-    
-    
+
     public void setSelection1(){
         selection = 1;
     }
@@ -108,10 +103,10 @@ public class BlackJack extends JPanel{
     public void paintComponent (Graphics g){
         Graphics2D g2 = (Graphics2D)g;
         try{
-        	imageBackground = ImageIO.read(new File("Background-Green-1600x1200.jpg"));
+            imageBackground = ImageIO.read(new File("Background-Green-1600x1200.jpg"));
         } catch(Exception e) {}       	       
         g2.drawImage(imageBackground, 0, 0, null);
-        
+
         for(int i = 0; i < playerList.size(); i ++){
             int xPos = 150;
             int splitX = 650;
@@ -128,69 +123,65 @@ public class BlackJack extends JPanel{
                     catch(Exception e){}
                 }
                 if(temp.isSplitPlayer() == true && j == 0){
-                       xPos = splitX +30;
+                    xPos = splitX +30;
                 }        
                 else{
                     xPos =  xPos + 30;
                 }
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
-                
+
             }
             if(blackJack == true){
-            	try{
-            		imageEnd = ImageIO.read(new File("blackjack.jpg"));
-            	} catch(Exception e){
-            		
-            	}
+                try{
+                    imageEnd = ImageIO.read(new File("blackjack.jpg"));
+                } catch(Exception e){
+
+                }
                 g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(bust == true){
-            	try{
-            		imageEnd = ImageIO.read(new File("bust.jpg"));
-            	} catch(Exception e){
-            		
-            	}
+                try{
+                    imageEnd = ImageIO.read(new File("bust.jpg"));
+                } catch(Exception e){
+
+                }
                 g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(push == true){
-            	try{
-            		imageEnd = ImageIO.read(new File("push.jpg"));
-            	} catch(Exception e){
-            		
-            	}
+                try{
+                    imageEnd = ImageIO.read(new File("push.jpg"));
+                } catch(Exception e){
+
+                }
                 g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(win == true){
-            	try{
-            		imageEnd = ImageIO.read(new File("win.jpg"));
-            	} catch(Exception e){
-            		
-            	}
+                try{
+                    imageEnd = ImageIO.read(new File("win.jpg"));
+                } catch(Exception e){
+
+                }
                 g2.drawImage(imageEnd, 1000, 500, null);
             }
             if(lose == true){
-            	try{
-            		imageEnd = ImageIO.read(new File("lose.jpg"));
-            	} catch(Exception e){
-            		
-            	}
+                try{
+                    imageEnd = ImageIO.read(new File("lose.jpg"));
+                } catch(Exception e){
+
+                }
                 g2.drawImage(imageEnd, 1000, 500, null);
             }
         }
-        
-        for(int i = 0; i < deckSize; i++) {
-			g2.drawImage(cardBack, i + 1000, 50, null);
-		}
-        
-        if(deckSize < 4){
-        	deckSize = 53;
+
+        for(int i = 0; i < deck.getDeckSize(); i++) {
+            g2.drawImage(cardBack, i + 1000, 50, null);
         }
-        
+
     }
 
     public void initializePlayers(int playerCount){
-    	
+
         for(int i = 0; i < playerCount ; i++){
             String name = "Player "+(i+1);
             Player temp = new Player(name, false,false);
@@ -210,21 +201,21 @@ public class BlackJack extends JPanel{
     }
 
     public void initialDeal(){
-    	blackJack= false;
-    	win  = false;
-    	lose = false;
-    	push = false;
-    	bust = false;
-    	cont = false;
-    	if(playerList.size() == 3){
-    	    playerList.remove(1);
-    	   }
-    	
+        blackJack= false;
+        win  = false;
+        lose = false;
+        push = false;
+        bust = false;
+        cont = false;
+        if(playerList.size() == 3){
+            playerList.remove(1);
+        }
+
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
             temp.addToHand(deck.deal());
             temp.addToHand(deck.deal());
-            deckSize -= 2;
+
             repaint();
         }
 
@@ -239,7 +230,7 @@ public class BlackJack extends JPanel{
             Player temp = playerList.get(count);
             selection = 0;
             dealerDone = false;
-            
+
             //TODO REMOVE SPLIT AFTER HIT
             if(temp.checkSplit() == true && temp.isDealer() == false && hasHit == false){
                 remove(doubleDown);
@@ -250,7 +241,7 @@ public class BlackJack extends JPanel{
             if(temp.isDealer() == true){
                 if(temp.getSum() < 17){
                     temp.addToHand(deck.deal());
-                    deckSize--;
+
                     count--;
                     repaint();
                 }   
@@ -267,10 +258,10 @@ public class BlackJack extends JPanel{
                         }
                         catch(Exception e){}
                     }
-                    
+
                     if(selection == 1){
-                    	temp.addToHand(deck.deal());
-                    	deckSize--;
+                        temp.addToHand(deck.deal());
+
                         count--;
                         remove(doubleDown);
                         repaint();
@@ -280,10 +271,10 @@ public class BlackJack extends JPanel{
                     if(selection == 2){
                         //nothing
                     }
-                    
+
                     if(selection == 3){
                         temp.addToHand(deck.deal()); 
-                        deckSize--;
+
                         repaint();
 
                     }
@@ -296,11 +287,11 @@ public class BlackJack extends JPanel{
                         temp.addToHand(deck.deal());                   
                         splitPlayer.addToHand(deck.deal());                        
                         playerList.add(count+1,splitPlayer);
-                        deckSize -= 2;
+
                         repaint();
                         count--;
                     }
-                    
+
                 }
             }
         }
@@ -338,13 +329,13 @@ public class BlackJack extends JPanel{
             }
         }
     }
-    
+
     public void makeContTrue() {
-    	cont = true;
+        cont = true;
     }  
-    
+
     public boolean getCont() {
-    	return cont;
+        return cont;
     }
 
     public static void main(String[] args) {
@@ -355,36 +346,35 @@ public class BlackJack extends JPanel{
         BlackJack game = new BlackJack();
 
         game.setLayout(null);
-        
+
         frame.add(game);
         frame.setVisible(true); 
         game.initializePlayers(1);
-        
 
         class YesButtonListener implements ActionListener{
             public void actionPerformed(ActionEvent event) {
-            	game.makeContTrue();
+                game.makeContTrue();
             }
         }
-        
+
         class NoButtonListener implements ActionListener{
             public void actionPerformed(ActionEvent event) {
-            	System.exit(0);
+                System.exit(0);
             }
         }
-        
+
         JButton yes = new JButton("CONTINUE");
         JButton no = new JButton("QUIT");
-        
+
         ActionListener yesListener = new YesButtonListener();
         yes.addActionListener(yesListener);  
         ActionListener noListener = new NoButtonListener();
         no.addActionListener(noListener);  
-        
+
         boolean cont = true;
         while(cont == true){
-        	
-        	game.initialDeal();
+
+            game.initialDeal();
             game.gameLogic();
             game.scoring();
             game.add(yes);
@@ -401,12 +391,10 @@ public class BlackJack extends JPanel{
             game.repaint();
             game.remove(yes);
             game.remove(no);
-           
+
         }
 
     }
 }
 
-
 //TODO Print end result for first hand split
-
