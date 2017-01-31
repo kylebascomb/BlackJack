@@ -23,6 +23,10 @@ public class Deck {
 		}
 	}
 	
+	public int getDeckSize(){
+	    return deck.size();
+	   }
+	
 	public Card deal(){
 		Random generator = new Random();
 	        int rand = generator.nextInt(deck.size()); 
