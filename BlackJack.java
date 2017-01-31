@@ -201,12 +201,6 @@ public class BlackJack extends JPanel{
         } 
     }
 
-    public void removePlayers() {
-    	for(int i = 0; i < playerList.size(); i++) {
-    		playerList.remove(i); 
-    	}
-    }
-    
     public void clearHand(){
         for(int i = 0; i < playerList.size(); i++)
         {
@@ -222,6 +216,9 @@ public class BlackJack extends JPanel{
     	push = false;
     	bust = false;
     	cont = false;
+    	if(playerList.size() == 3){
+    	    playerList.remove(1);
+    	   }
     	
         for(int i = 0; i < playerList.size(); i++){
             Player temp = playerList.get(i);
@@ -307,6 +304,7 @@ public class BlackJack extends JPanel{
                 }
             }
         }
+
     }
 
     public int getDealerSum(){
