@@ -13,11 +13,13 @@ public class Player extends JPanel{
     private int xPos;
     private int yPos;
     private BufferedImage image;
+    private boolean split;
 
-    public Player(String name, boolean isDealer) {
+    public Player(String name, boolean isDealer, boolean isSplit) {
         playerName = name;
         hand = new ArrayList<Card>();
         dealer = isDealer;
+        split = isSplit;
         yPos = 450;
         if(isDealer == true){
             yPos = 100;
@@ -80,6 +82,10 @@ public class Player extends JPanel{
             return false;
     }
 
+    public boolean isSplitPlayer() {
+    	return split;
+    }
+    
     public int countAce(){
         int count = 0;
         for(int i = 0; i < hand.size(); i++){
