@@ -115,6 +115,7 @@ public class BlackJack extends JPanel{
         g2.drawImage(imageBackground, 0, 0, null);
         for(int i = 0; i < playerList.size(); i ++){
             int xPos = 150;
+            int splitX = 650;
             Player temp = playerList.get(i);
             ArrayList<Card> playerHand = temp.getHand();
 
@@ -128,10 +129,10 @@ public class BlackJack extends JPanel{
                     catch(Exception e){}
                 }
                 if(temp.isSplitPlayer() == true && j == 0){
-                       xPos = xPos + 500 +(15*(playerHand.size()));
+                       xPos = splitX +30;
                 }        
                 else{
-                    xPos =  xPos + (15*(playerHand.size()));
+                    xPos =  xPos + 30;
                 }
                 int yPos = temp.getYPos();
                 g2.drawImage(image,xPos,yPos,null);
