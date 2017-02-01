@@ -1,0 +1,45 @@
+import javax.swing.JFrame;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.*;
+import java.awt.event.*;
+import java.io.File;
+
+
+
+public class Music {
+
+	public static void main(String[] args) {
+		JFrame frame = new JFrame();
+		frame.setSize(1000,1000);
+		/*JButton button = new JButton("Play");
+		frame.add(button);
+		ActionListener musicButton = new musicButton();
+		button.addActionListener(musicButton);*/
+    //Play Button is not needed. If you want to make play button method must be static.
+		Music song = new Music();
+		song.play();
+
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+	
+	/*public static class musicButton implements ActionListener{
+		public final void actionPerformed(ActionEvent e) {
+			//Needs Static Method
+		}
+	}*/
+	
+	public void play() {
+		  try {
+		   File file = new File("Name of your file (Should be .wav file, haven't test mp3)" + ".wav");
+		   Clip clip = AudioSystem.getClip();
+		   clip.open(AudioSystem.getAudioInputStream(file));
+		   clip.start();
+		   Thread.sleep(100);
+		  } catch (Exception e) {
+		   System.err.println(e.getMessage());
+		  }
+		 }
+}
