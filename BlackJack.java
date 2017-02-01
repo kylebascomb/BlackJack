@@ -9,7 +9,7 @@ import java.awt.event.*;
 public class BlackJack extends JPanel{
     private Deck deck;
     private ArrayList<Player> playerList;
-    private ArrayList<Integer> playerScores; 
+    private ArrayList<Integer> playerScores;
     private Player dealer;
     private boolean dealerDone;
     private boolean hasHit;
@@ -28,8 +28,7 @@ public class BlackJack extends JPanel{
     public BlackJack(){
         deck = new Deck();
         playerList = new ArrayList<Player>();
-        playerScores = new ArrayList<Integer>();
-        
+
         dealer = new Player("Dealer",true,false);
         selection = 0;
         add(hit);
@@ -135,79 +134,84 @@ public class BlackJack extends JPanel{
                 g2.drawImage(image,xPos,yPos,null);
 
             }
-            if(playerScores.get(i) == 1){
-                try{
-                    imageEnd = ImageIO.read(new File("blackjack.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer() == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-            if(playerScores.get(i) == 2){
-                try{
-                    imageEnd = ImageIO.read(new File("bust.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer() == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-                
-            }
-            if(playerScores.get(i) == 3){
-                try{
-                    imageEnd = ImageIO.read(new File("push.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer() == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-            if(playerScores.get(i) == 4){
-                try{
-                    imageEnd = ImageIO.read(new File("win.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer() == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-            if(playerScores.get(i) == 5){
-                try{
-                    imageEnd = ImageIO.read(new File("lose.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer() == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
         }
 
-            for(int i = 0; i < deck.getDeckSize(); i++) {
-                g2.drawImage(cardBack, i + 1000, 50, null);
-            }
+        if(playerScores.size() > 0 && dealerDone == true){
+            for(int i = 0; i < playerList.size()-1; i ++){
+                Player temp = playerList.get(i);
+                if(playerScores.get(i)==1){
+                    try{
+                        imageEnd = ImageIO.read(new File("blackjack.jpg"));
+                    } catch(Exception e){
 
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 680, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 180, 700, null);
+                    }
+                }
+                if(playerScores.get(i) == 2){
+                    try{
+                        imageEnd = ImageIO.read(new File("bust.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 680, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 180, 700, null);
+                    }
+
+                }
+                if(playerScores.get(i) == 3){
+                    try{
+                        imageEnd = ImageIO.read(new File("push.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 680, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 180, 700, null);
+                    }
+                }
+                if(playerScores.get(i) == 4){
+                    try{
+                        imageEnd = ImageIO.read(new File("win.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 680, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 180, 700, null);
+                    }
+                }
+                if(playerScores.get(i) == 5){
+                    try{
+                        imageEnd = ImageIO.read(new File("lose.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 680, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 180, 700, null);
+                    }
+                }
+
+            }
         }
+        for(int i = 0; i < deck.getDeckSize(); i++) {
+            g2.drawImage(cardBack, i + 1000, 50, null);
+        }
+    }
 
     public void initializePlayers(int playerCount){
 
@@ -236,6 +240,7 @@ public class BlackJack extends JPanel{
         push = false;
         bust = false;
         cont = false;
+        playerScores = new ArrayList<Integer>();
         if(playerList.size() == 3){
             playerList.remove(1);
         }
@@ -323,10 +328,12 @@ public class BlackJack extends JPanel{
 
                 }
             }
-            
+        }
+        
+            for(int i = 0; i < playerList.size();i++){
+            Player temp = playerList.get(i);
             ArrayList<Card> hand = temp.getHand();
             
-
             if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true && hand.size() == 2) {// ace+face+8+2 counted as blackjack
                 playerScores.add(1);
             } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
@@ -340,6 +347,7 @@ public class BlackJack extends JPanel{
             } else {
                 playerScores.add(5);
             }
+            repaint();
         }
 
     }
@@ -369,6 +377,8 @@ public class BlackJack extends JPanel{
         frame.setTitle("BlackJack");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BlackJack game = new BlackJack();
+        Music song = new Music();
+        song.play();
 
         game.setLayout(null);
 
@@ -420,6 +430,3 @@ public class BlackJack extends JPanel{
 
     }
 }
-
-//TODO Print end result for first hand split
-
