@@ -9,6 +9,7 @@ import java.awt.event.*;
 public class BlackJack extends JPanel{
     private Deck deck;
     private ArrayList<Player> playerList;
+    private ArrayList<Integer> playerScores;
     private Player dealer;
     private boolean dealerDone;
     private boolean hasHit;
@@ -27,6 +28,7 @@ public class BlackJack extends JPanel{
     public BlackJack(){
         deck = new Deck();
         playerList = new ArrayList<Player>();
+
         dealer = new Player("Dealer",true,false);
         selection = 0;
         add(hit);
@@ -132,76 +134,82 @@ public class BlackJack extends JPanel{
                 g2.drawImage(image,xPos,yPos,null);
 
             }
-            if(blackJack == true){
-                try{
-                    imageEnd = ImageIO.read(new File("blackjack.jpg"));
-                } catch(Exception e){
+        }
+
+        if(playerScores.size() > 0 && dealerDone == true){
+            for(int i = 0; i < playerList.size()-1; i ++){
+                Player temp = playerList.get(i);
+                if(playerScores.get(i)==1){
+                    try{
+                        imageEnd = ImageIO.read(new File("blackjack.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 650, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 150, 700, null);
+                    }
+                }
+                if(playerScores.get(i) == 2){
+                    try{
+                        imageEnd = ImageIO.read(new File("bust.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 650, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 150, 700, null);
+                    }
 
                 }
-                if(temp.isSplitPlayer == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
+                if(playerScores.get(i) == 3){
+                    try{
+                        imageEnd = ImageIO.read(new File("push.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 650, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 150, 700, null);
+                    }
                 }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
+                if(playerScores.get(i) == 4){
+                    try{
+                        imageEnd = ImageIO.read(new File("win.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 650, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 150, 700, null);
+                    }
                 }
+                if(playerScores.get(i) == 5){
+                    try{
+                        imageEnd = ImageIO.read(new File("lose.jpg"));
+                    } catch(Exception e){
+
+                    }
+                    if(temp.isSplitPlayer() == true){
+                        g2.drawImage(imageEnd, 650, 700, null);
+                    }
+                    else{
+                        g2.drawImage(imageEnd, 150, 700, null);
+                    }
+                }
+
             }
-            if(bust == true){
-                try{
-                    imageEnd = ImageIO.read(new File("bust.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-            if(push == true){
-                try{
-                    imageEnd = ImageIO.read(new File("push.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-            if(win == true){
-                try{
-                    imageEnd = ImageIO.read(new File("win.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-            if(lose == true){
-                try{
-                    imageEnd = ImageIO.read(new File("lose.jpg"));
-                } catch(Exception e){
-
-                }
-                if(temp.isSplitPlayer == true){
-                    g2.drawImage(imageEnd, 150, 650, null);
-                }
-                else{
-                    g2.drawImage(imageEnd, 650, 650, null);
-                }
-            }
-
-            for(int i = 0; i < deck.getDeckSize(); i++) {
-                g2.drawImage(cardBack, i + 1000, 50, null);
-            }
-
+        }
+        for(int i = 0; i < deck.getDeckSize(); i++) {
+            g2.drawImage(cardBack, i + 1000, 50, null);
         }
     }
 
@@ -232,6 +240,7 @@ public class BlackJack extends JPanel{
         push = false;
         bust = false;
         cont = false;
+        playerScores = new ArrayList<Integer>();
         if(playerList.size() == 3){
             playerList.remove(1);
         }
@@ -320,6 +329,26 @@ public class BlackJack extends JPanel{
                 }
             }
         }
+        
+            for(int i = 0; i < playerList.size();i++){
+            Player temp = playerList.get(i);
+            ArrayList<Card> hand = temp.getHand();
+            
+            if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true && hand.size() == 2) {// ace+face+8+2 counted as blackjack
+                playerScores.add(1);
+            } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
+            //TODO If Player and Dealer get BlackJack PUSH
+            }*/ else if(temp.getSum() > 21) {
+                playerScores.add(2);
+            } else if(temp.getSum() == getDealerSum()) {
+                playerScores.add(3);
+            } else if (temp.getSum() > getDealerSum() || getDealerSum() > 21) {
+                playerScores.add(4);
+            } else {
+                playerScores.add(5);
+            }
+            repaint();
+        }
 
     }
 
@@ -332,27 +361,6 @@ public class BlackJack extends JPanel{
             } 
         }
         return dealerTotal;
-    }
-
-    public void scoring(){
-        for(int i = 0; i < playerList.size() - 1; i++) {
-            Player temp = playerList.get(i);
-            ArrayList<Card> hand = temp.getHand();
-
-            if(temp.getSum() == 21 && temp.countAce() == 1 && temp.checkFace() == true && hand.size() == 2) {// ace+face+8+2 counted as blackjack
-                blackJack = true;
-            } /*else if(temp.getSum() == 21 && temp.checkAce() == true && temp.checkFace() == true) {
-            //TODO If Player and Dealer get BlackJack PUSH
-            }*/ else if(temp.getSum() > 21) {
-                bust = true;
-            } else if(temp.getSum() == getDealerSum()) {
-                push = true;
-            } else if (temp.getSum() > getDealerSum() || getDealerSum() > 21) {
-                win = true;
-            } else {
-                lose = true;
-            }
-        }
     }
 
     public void makeContTrue() {
@@ -401,7 +409,6 @@ public class BlackJack extends JPanel{
 
             game.initialDeal();
             game.gameLogic();
-            game.scoring();
             game.add(yes);
             yes.setBounds(1650, 500, 100, 100);
             game.add(no);
